@@ -42,8 +42,8 @@ namespace ppt_diffmerge_tool
             IsCommand("merge", "Merges 2 powerpoint files.");
             HasRequiredOption<string>("l|local=", "Local file", f => Local = f);
             HasRequiredOption<string>("r|remote=", "Remote file", f => Remote = f);
-            HasRequiredOption<string>("o|output=", "Output file", f => Output = f);
-            HasOption<string>("b|base=", "Base file", f => Base = f);
+            HasOption<string>("o|output=", "(Optional) Output file", f => Output = f);
+            HasOption<string>("b|base=", "(Optional) Base file", f => Base = f);
         }
 
         public override int Run(string[] remainingArguments)
@@ -56,8 +56,13 @@ namespace ppt_diffmerge_tool
                 app = new PowerPointApplication();
                 app.PresentationCloseFinal += App_PresentationClose;
 
-                File.Copy(Local, Output, true);
-                presentation = app.Presentations.Open(Output);
+                if (!string.IsNullOrWhiteSpace(Output))
+                {
+                    File.Copy(Local, Output, true);
+                    Local = Output;
+                }
+
+                presentation = app.Presentations.Open(Local);
 
                 if (string.IsNullOrWhiteSpace(Base))
                 {
@@ -109,7 +114,7 @@ namespace ppt_diffmerge_tool
             IsCommand("diff", "Diffs 2 powerpoint files.");
             HasRequiredOption<string>("l|local=", "Local file", f => Local = f);
             HasRequiredOption<string>("r|remote=", "Remote file", f => Remote = f);
-            HasOption<string>("b|base=", "Base file", f => Base = f);
+            HasOption<string>("b|base=", "(Optional) Base file", f => Base = f);
         }
 
         public override int Run(string[] remainingArguments)
