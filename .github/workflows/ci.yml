@@ -18,5 +18,5 @@ jobs:
       with:
         msbuild-architecture: x64
     - run: |
-        msbuild /t:build /p:configration=release /p:platform=anycpu ppt-diffmerge.sln
+        msbuild /t:build /p:configration=release /p:platform="Any CPU" ppt-diffmerge.sln
       name: build
