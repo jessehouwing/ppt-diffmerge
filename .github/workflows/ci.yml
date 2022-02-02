@@ -23,6 +23,10 @@ jobs:
     - run: |
         msbuild /t:build /p:configuration=release /p:platform="Any CPU" ppt-diffmerge.sln
       name: build
+    - run: |
+        cd ./ppt-diffmerge-tool/bin/Release/
+        7z a ppt-diffmerge.zip -tzip
+      name: build 
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -30,5 +34,5 @@ jobs:
         prerelease: true
         title: "Development Build"
         files: |
-          ./ppt-diffmerge-tool/bin/Release/*
+          ./ppt-diffmerge-tool/bin/Release/ppt-diffmerge.zip
          
