@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using PowerPointApplication = Microsoft.Office.Interop.PowerPoint.Application;
 using Microsoft.Office.Interop.PowerPoint;
+using System.Linq;
 
 namespace ppt_diffmerge_tool
 {
@@ -50,7 +51,10 @@ namespace ppt_diffmerge_tool
             try
             {
                 app = new PowerPointApplication();
-                app.PresentationCloseFinal += App_PresentationClose;
+                app.PresentationCloseFinal += (Presentation _) =>
+                {
+                    handle.Set();
+                };
 
                 if (!string.IsNullOrWhiteSpace(Output))
                 {
@@ -70,6 +74,8 @@ namespace ppt_diffmerge_tool
                 }
 
                 handle.WaitOne();
+
+                // Ask to save?
             }
             finally
             {
@@ -77,76 +83,6 @@ namespace ppt_diffmerge_tool
                 Marshal.ReleaseComObject(app);
             }
             return 0;
-        }
-
-        private void App_PresentationClose(Presentation presentation)
-        {
-            handle.Set();
-        }
-    }
-
-    internal class DiffCommand : ConsoleCommand
-    {
-        readonly ManualResetEvent handle = new ManualResetEvent(false);
-
-        public string @Base
-        {
-            get;
-            set;
-        }
-
-        public string Local
-        {
-            get; set;
-        }
-
-        public string Remote
-        {
-            get; set;
-        }
-
-        public DiffCommand()
-        {
-            IsCommand("diff", "Diffs 2 powerpoint files.");
-            HasRequiredOption<string>("l|local=", "Local file", f => Local = f);
-            HasRequiredOption<string>("r|remote=", "Remote file", f => Remote = f);
-            HasOption<string>("b|base=", "(Optional) Base file", f => Base = f);
-        }
-
-        public override int Run(string[] remainingArguments)
-        {
-            PowerPointApplication app = null;
-            Presentation presentation = null;
-
-            try
-            {
-                app = new PowerPointApplication();
-                app.PresentationCloseFinal += App_PresentationClose;
-
-                presentation = app.Presentations.Open(Local, Microsoft.Office.Core.MsoTriState.msoTrue);
-
-                if (string.IsNullOrWhiteSpace(Base))
-                {
-                    presentation.Merge(Remote);
-                }
-                else
-                {
-                    presentation.MergeWithBaseline(Remote, Base);
-                }
-
-                handle.WaitOne();
-            }
-            finally
-            {
-                Marshal.ReleaseComObject(presentation);
-                Marshal.ReleaseComObject(app);
-            }
-            return 0;
-        }
-
-        private void App_PresentationClose(Presentation presentation)
-        {
-            handle.Set();
         }
     }
 
@@ -158,8 +94,11 @@ namespace ppt_diffmerge_tool
             int result;
             try
             {
-                ConsoleCommand[] commands = { new DiffCommand(), new MergeCommand() };
-                result = ConsoleCommandDispatcher.DispatchCommand(commands, args, Console.Out);
+                if (!string.Equals(args.FirstOrDefault(), "merge", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    args = new []{ "merge "}.Concat(args).ToArray();
+                }
+                result = ConsoleCommandDispatcher.DispatchCommand(new MergeCommand(), args, Console.Out);
             }
             catch (Exception e)
             {
