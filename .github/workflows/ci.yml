@@ -1,0 +1,22 @@
+name: .NET
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: setup-msbuild
+      uses: microsoft/setup-msbuild@v1.1
+      with:
+        msbuild-architecture: x64
+    - run: |
+        msbuild /t:build /p:configration=release /p:platform=anycpu ppt-diffmerge.sln
+      name: build
