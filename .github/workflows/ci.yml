@@ -18,5 +18,8 @@ jobs:
       with:
         msbuild-architecture: x64
     - run: |
+        msbuild /t:restore /p:configration=release /p:platform="Any CPU" ppt-diffmerge.sln
+      name: restore        
+    - run: |
         msbuild /t:build /p:configration=release /p:platform="Any CPU" ppt-diffmerge.sln
       name: build
