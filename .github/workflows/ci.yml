@@ -30,4 +30,5 @@ jobs:
         prerelease: true
         title: "Development Build"
         files: |
-          ppt-diffmerge-tool/bin/Debug/*
+          ./ppt-diffmerge-tool/bin/Release/*
+         
