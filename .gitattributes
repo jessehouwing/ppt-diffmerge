@@ -1,0 +1,3 @@
+*.ppt	binary diff=ppt-diffmerge merge=ppt-diffmerge
+*.pptm	binary diff=ppt-diffmerge merge=ppt-diffmerge
+*.pptx	binary diff=ppt-diffmerge merge=ppt-diffmerge
