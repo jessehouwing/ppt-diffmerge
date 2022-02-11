@@ -25,7 +25,7 @@ To register this tool in git, add these sections to your git config:
 Then register the file extensions for PowerPoint by setting the merge tool attroibutes in your `.gitattributes`:
 
 ```
-*.ppt	binary diff=ppt-diffmerge merge=ppt-diffmerge
-*.pptm	binary diff=ppt-diffmerge merge=ppt-diffmerge
-*.pptx	binary diff=ppt-diffmerge merge=ppt-diffmerge
+*.ppt	binary diff=pptdiffmerge merge=pptdiffmerge
+*.pptm	binary diff=pptdiffmerge merge=pptdiffmerge
+*.pptx	binary diff=pptdiffmerge merge=pptdiffmerge
 ```
