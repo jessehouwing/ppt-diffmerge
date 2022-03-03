@@ -3,7 +3,7 @@
 A little commandline tool to start PowerPoint in merge mode.
 
 ```
-ppt-diffmerge-tool --local="$LOCAL" --remote="$REMOTE" --base="$BASE" --output="$RESULT" 
+ppt-diffmerge-tool "$LOCAL" "$REMOTE" "$BASE" "$RESULT"
 ```
 
 ## Git config
