@@ -22,7 +22,7 @@ To register this tool in git, add these sections to your git config:
 	cmd = C:/ppt-diffmerge/ppt-diffmerge-tool/bin/Debug/ppt-diffmerge-tool.exe "$LOCAL" "$REMOTE" "$BASE" "$RESULT"
 ```
 
-Then register the file extensions for PowerPoint by setting the merge tool attroibutes in your `.gitattributes`:
+Then register the file extensions for PowerPoint by setting the merge tool attributes in your `.gitattributes`:
 
 ```
 *.ppt	binary diff=pptdiffmerge merge=pptdiffmerge
