@@ -26,13 +26,9 @@ jobs:
     - run: |
         cd ./ppt-diffmerge-tool/bin/Release/
         7z a ppt-diffmerge.zip -tzip
-      name: build 
-    - uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "latest"
-        prerelease: true
-        title: "Development Build"
-        files: |
-          ./ppt-diffmerge-tool/bin/Release/ppt-diffmerge.zip
-         
+      name: Zip Artifact 
+    - run: |
+        gh release latest -y
+        git tag latest HEAD --force
+        gh release create latest --generate-notes --prerelease --latest --title "Development Build" ./ppt-diffmerge-tool/bin/Release/ppt-diffmerge.zip
+      name: Create Release
