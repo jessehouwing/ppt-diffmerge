@@ -33,7 +33,7 @@ jobs:
     - run: |
         gh release delete latest --yes --cleanup-tag
         git tag latest HEAD --force
-        git push origin latest --force
+        git push origin --tags --force
         gh release create latest --generate-notes --prerelease --latest --title "Development Build" ./ppt-diffmerge-tool/bin/Release/ppt-diffmerge.zip
       name: Create Release
       env:
