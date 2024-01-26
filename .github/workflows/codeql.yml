@@ -61,7 +61,7 @@ jobs:
         # queries: security-extended,security-and-quality
 
     - name: setup-msbuild
-      uses: microsoft/setup-msbuild@1ff57057b5cfdc39105cd07a01d78e9b0ea0c14c # v1.3
+      uses: microsoft/setup-msbuild@031090342aeefe171e49f3820f3b52110c66e402 # v1.3
       with:
         msbuild-architecture: x64
     - run: |
