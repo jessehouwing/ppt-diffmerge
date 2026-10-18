@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -19,31 +19,36 @@ namespace ppt_diffmerge_tool
             try
             {
                 // Create some options:
-                var localFile = new Argument<FileInfo>("local", description: "path to local file");
-                localFile.LegalFilePathsOnly();
-                localFile.ExistingOnly();
+                var localFile = new Argument<FileInfo>("local") { Description = "path to local file" };
+                localFile.AcceptLegalFilePathsOnly();
+                localFile.AcceptExistingOnly();
 
-                var remoteFile = new Argument<FileInfo>("remote", description: "path to remote file");
-                remoteFile.LegalFilePathsOnly();
-                remoteFile.ExistingOnly();
+                var remoteFile = new Argument<FileInfo>("remote") { Description = "path to remote file" };
+                remoteFile.AcceptLegalFilePathsOnly();
+                remoteFile.AcceptExistingOnly();
 
-                var baseFile = new Argument<FileInfo>("base", description: "(Optional) path to base file");
-                baseFile.LegalFilePathsOnly();
-                baseFile.ExistingOnly();
-                baseFile.SetDefaultValue(null);
+                var baseFile = new Argument<FileInfo>("base")
+                {
+                    Description = "(Optional) path to base file",
+                    Arity = ArgumentArity.ZeroOrOne,
+                    DefaultValueFactory = _ => null
+                };
+                baseFile.AcceptLegalFilePathsOnly();
+                baseFile.AcceptExistingOnly();
 
-                var resultFile = new Argument<FileInfo>("result", description: "(Optional) path to result file");
-                resultFile.LegalFilePathsOnly();
-                resultFile.SetDefaultValue(null);
+                var resultFile = new Argument<FileInfo>("result")
+                {
+                    Description = "(Optional) path to result file",
+                    Arity = ArgumentArity.ZeroOrOne,
+                    DefaultValueFactory = _ => null
+                };
+                resultFile.AcceptLegalFilePathsOnly();
 
-                // Add the options to a root command:
-                var rootCommand = new RootCommand();
-                rootCommand.AddArgument(localFile);
-                rootCommand.AddArgument(remoteFile);
-                rootCommand.AddArgument(baseFile);
-                rootCommand.AddArgument(resultFile);
-
-                rootCommand.Description = "PowerPoint Diff/Merge tool";
+                var rootCommand = new RootCommand("PowerPoint Diff/Merge tool");
+                rootCommand.Arguments.Add(localFile);
+                rootCommand.Arguments.Add(remoteFile);
+                rootCommand.Arguments.Add(baseFile);
+                rootCommand.Arguments.Add(resultFile);
 
                 void handle1(FileInfo lf, FileInfo rf, FileInfo bf, FileInfo resf)
                 {
@@ -86,10 +91,10 @@ namespace ppt_diffmerge_tool
                     }
                 }
 
-                rootCommand.SetHandler((Action<FileInfo, FileInfo, FileInfo, FileInfo>)handle1, localFile, remoteFile, baseFile, resultFile);
+                rootCommand.SetAction(parseResult => handle1(parseResult.GetValue(localFile), parseResult.GetValue(remoteFile), parseResult.GetValue(baseFile), parseResult.GetValue(resultFile)));
 
                 // Parse the incoming args and invoke the handler
-                return rootCommand.Invoke(args);
+                return rootCommand.Parse(args).Invoke();
             }
             catch (Exception e)
             {
