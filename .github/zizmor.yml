@@ -1,0 +1,8 @@
+# GitHub Actions are pinned through actions.lock rather than inline SHAs.
+rules:
+  unpinned-uses:
+    disable: true
+  # This repo intentionally uses a 3-day cooldown instead of zizmor's
+  # generic 7-day recommendation.
+  dependabot-cooldown:
+    disable: true
