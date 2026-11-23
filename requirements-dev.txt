@@ -1,0 +1,5 @@
+# Python tooling used by pre-commit hooks and CI (installed via
+# `pip install -r requirements-dev.txt`). Keep in sync with Dependabot's
+# `pip` ecosystem updates.
+pre-commit==4.7.0
+zizmor==1.32.0
